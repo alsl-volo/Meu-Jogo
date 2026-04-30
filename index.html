@@ -30,6 +30,7 @@ h1 {
     top: 0;
     color: gold;
     font-weight: bold;
+    font-size: 18px;
 }
 
 #zone {
@@ -54,6 +55,12 @@ button {
 <body>
 
 <h1>🎶 Il Volo Rhythm 🎶</h1>
+
+<!-- MÚSICA -->
+<audio controls autoplay loop>
+  <source src="Il Volo - Grande amore.mp3" type="audio/mpeg">
+</audio>
+
 <p>Carrega SPACE quando o nome chega ao verde</p>
 
 <button onclick="startGame()">Iniciar</button>
@@ -64,11 +71,6 @@ button {
 <div id="game">
     <div id="zone"></div>
 </div>
-
-<!-- Música (YouTube escondido) -->
-<iframe width="0" height="0"
-src="https://www.youtube.com/embed/w1f6o1HQBvg?autoplay=1&loop=1&playlist=w1f6o1HQBvg"
-frameborder="0" allow="autoplay"></iframe>
 
 <script>
 let game = document.getElementById("game");
