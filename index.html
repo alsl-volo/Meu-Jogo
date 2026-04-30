@@ -7,58 +7,100 @@
 <style>
 body {
   margin:0;
-  font-family: Arial;
+  min-height:100vh;
+  font-family:Arial, sans-serif;
   text-align:center;
   color:white;
-
-  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)),
-              url('fundo.jpg.jpg');
-  background-size: cover;
+  background:
+    linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.55)),
+    url('fundo.jpg.jpg');
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;
 }
 
 h1 {
-  color: gold;
-  text-shadow: 0 0 15px gold;
+  color:gold;
+  font-size:42px;
+  text-shadow:0 0 18px gold, 0 0 8px black;
 }
 
 .container {
-  background: rgba(0,0,0,0.7);
-  padding:20px;
-  border-radius:20px;
-  width: 80%;
-  margin:auto;
-  margin-top:20px;
-  box-shadow: 0 0 20px gold;
+  background:rgba(0,0,0,0.68);
+  padding:25px;
+  border-radius:22px;
+  width:80%;
+  max-width:950px;
+  margin:25px auto;
+  box-shadow:0 0 28px gold;
+  border:1px solid rgba(255,215,0,0.5);
+}
+
+audio {
+  margin:12px auto;
+  display:block;
+}
+
+input {
+  padding:12px;
+  border-radius:12px;
+  border:2px solid gold;
+  font-size:18px;
+  text-align:center;
 }
 
 button {
   display:block;
-  margin:10px auto;
-  padding:15px;
-  width:60%;
+  margin:12px auto;
+  padding:16px;
+  width:65%;
   border:none;
-  border-radius:10px;
-  font-size:16px;
+  border-radius:14px;
+  font-size:18px;
+  font-weight:bold;
   cursor:pointer;
-  color:white;
 }
 
-.red { background:#ff4d4d; }
-.blue { background:#4da6ff; }
+#startBtn, .goldBtn {
+  background:gold;
+  color:black;
+}
+
+.red { background:#ff4d4d; color:black; }
+.blue { background:#4da6ff; color:black; }
 .yellow { background:#ffcc00; color:black; }
 .green { background:#4dff4d; color:black; }
 
-#startBtn {
-  background:gold;
-  color:black;
-  padding:15px 30px;
+.correct { background:#00a000!important; color:white!important; }
+.wrong { background:#b00000!important; color:white!important; }
+
+#timer, #score, #progress {
+  color:gold;
+  font-size:20px;
+  font-weight:bold;
 }
 
-#nameInput {
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  width:200px;
+#question {
+  font-size:28px;
+}
+
+#ranking p {
+  font-size:22px;
+}
+
+.confetti {
+  position:fixed;
+  top:-10px;
+  width:10px;
+  height:10px;
+  animation:fall 3s linear forwards;
+  z-index:9999;
+}
+
+@keyframes fall {
+  to {
+    transform:translateY(110vh) rotate(360deg);
+  }
 }
 </style>
 </head>
@@ -67,91 +109,159 @@ button {
 
 <h1>🎤 Il Volo Quiz 🎶</h1>
 
-<audio id="music" loop>
-  <source src="Il Volo - Il Mondo.mp3" type="audio/mpeg">
+<audio id="music" controls loop>
+  <source src="Il%20Volo%20-%20Il%20Mondo.mp3" type="audio/mpeg">
 </audio>
 
 <div id="startScreen" class="container">
   <h2>Introduz o teu nome 👇</h2>
   <input id="nameInput" placeholder="Nome">
   <br><br>
-  <button id="startBtn" onclick="startGame()">Começar</button>
+  <button id="startBtn" onclick="startGame()">▶️ Começar</button>
 </div>
 
 <div id="quiz" class="container" style="display:none;">
+  <div id="progress"></div>
+  <div id="timer">⏱️ Tempo: 15</div>
+  <div id="score">⭐ Pontos: 0</div>
+
   <h2 id="question"></h2>
   <div id="answers"></div>
-  <p id="score"></p>
+  <h3 id="feedback"></h3>
 </div>
 
 <div id="end" class="container" style="display:none;">
   <h2>🏆 Ranking Final 🏆</h2>
   <div id="ranking"></div>
-  <button id="startBtn" onclick="restart()">Jogar outra vez</button>
+  <h2 id="finalResult"></h2>
+  <button class="goldBtn" onclick="restart()">🔁 Jogar outra vez</button>
 </div>
 
 <script>
 let player = "";
 let score = 0;
 let current = 0;
+let timeLeft = 15;
+let timer;
+let answered = false;
 
-let ranking = JSON.parse(localStorage.getItem("ranking") || "[]");
+let ranking = JSON.parse(localStorage.getItem("rankingIlVolo") || "[]");
 
 let questions = [
-  {q:"Quem são os membros?", a:["Piero, Ignazio e Gianluca","Marco, Luca e Paolo","Eros, Nek e Tiziano","Coldplay"], c:0},
-  {q:"De que país são?", a:["Espanha","França","Itália","Brasil"], c:2},
-  {q:"Ano de formação?", a:["2009","2015","2000","2012"], c:0},
-  {q:"Canção famosa?", a:["Grande Amore","Despacito","Hello","Shape of You"], c:0},
-  {q:"Participaram em?", a:["Sanremo","Eurovisão","X Factor","Todos"], c:3},
-  {q:"Voz de Piero?", a:["Tenor","Barítono","Baixo","Soprano"], c:1},
-  {q:"Nome de Gianluca?", a:["Ginoble","Bocelli","Ramazzotti","Pausini"], c:0},
-  {q:"Idioma principal?", a:["Italiano","Inglês","Espanhol","Francês"], c:0},
-  {q:"Música Il Mondo?", a:["Sim","Não","Talvez","Nunca"], c:0},
-  {q:"Estilo?", a:["Pop lírico","Rock","Rap","Jazz"], c:0},
-  {q:"Ano Sanremo vitória?", a:["2015","2010","2020","2005"], c:0},
-  {q:"Nome do grupo?", a:["Il Volo","Trio X","Tenores","Opera Pop"], c:0},
-  {q:"Origem TV?", a:["Ti Lascio una Canzone","The Voice","Idol","Got Talent"], c:0},
-  {q:"Tipo de música?", a:["Clássico-pop","Eletrónica","Metal","Funk"], c:0},
-  {q:"Instrumento principal?", a:["Voz","Guitarra","Piano","Bateria"], c:0},
-  {q:"Quantos membros?", a:["3","2","4","5"], c:0},
-  {q:"Idioma canções?", a:["Italiano e Inglês","Só inglês","Só espanhol","Português"], c:0},
-  {q:"Nome Ignazio?", a:["Boschetto","Rossi","Verdi","Bianchi"], c:0},
-  {q:"Género musical?", a:["Ópera pop","Trap","House","Techno"], c:0},
-  {q:"Fãs chamam-se?", a:["Volovers","Directioners","Beliebers","Swifties"], c:0}
+  {q:"Quem são os membros dos Il Volo?", a:["Piero, Ignazio e Gianluca","Marco, Luca e Paolo","Eros, Nek e Tiziano","Andrea, Matteo e Lorenzo"], c:0},
+  {q:"De que país são os Il Volo?", a:["Portugal","Itália","França","Espanha"], c:1},
+  {q:"Qual música venceu Sanremo 2015?", a:["Grande Amore","Il Mondo","Capolavoro","Musica che resta"], c:0},
+  {q:"Quantos membros tem o grupo?", a:["2","3","4","5"], c:1},
+  {q:"Quais são os tipos de voz do trio?", a:["Piero e Ignazio são tenores; Gianluca é barítono","Todos são tenores","Todos são barítonos","Todos são baixos"], c:0},
+  {q:"Qual deles é barítono?", a:["Gianluca","Piero","Ignazio","Nenhum"], c:0},
+  {q:"Que estilo é mais associado aos Il Volo?", a:["Pop lírico / crossover clássico","Rap","Heavy metal","Reggae"], c:0},
+  {q:"O nome 'Il Volo' significa:", a:["O Voo","A Voz","O Amor","A Luz"], c:0},
+  {q:"Que música levaram à Eurovisão em 2015?", a:["Grande Amore","Perfect","Hello","Imagine"], c:0},
+  {q:"Onde ficaram conhecidos ainda jovens?", a:["Ti lascio una canzone","The Voice","Got Talent","X Factor UK"], c:0},
+  {q:"Qual destas músicas é muito associada ao grupo?", a:["Il Mondo","Thriller","Bad Romance","Despacito"], c:0},
+  {q:"Qual destas foi apresentada em Sanremo 2024?", a:["Capolavoro","Billie Jean","Viva la Vida","Halo"], c:0},
+  {q:"Qual destas canções é dos Il Volo?", a:["Musica che resta","Rolling in the Deep","Radioactive","Shallow"], c:0},
+  {q:"Que compositor homenagearam num projeto especial?", a:["Ennio Morricone","Mozart","Beethoven","Bach"], c:0},
+  {q:"Qual frase define melhor o grupo?", a:["Trio vocal italiano de projeção internacional","Banda rock inglesa","DJ eletrónico","Grupo de dança espanhol"], c:0},
+  {q:"Qual é uma característica dos concertos deles?", a:["Elegância e ambiente clássico","Máscaras de terror","Roupa de futebol","Cenário de videojogo"], c:0},
+  {q:"Qual palavra combina melhor com Il Volo?", a:["Romantismo","Terror","Agressividade","Comédia"], c:0},
+  {q:"Qual destas NÃO é dos Il Volo?", a:["Thriller","Grande Amore","Capolavoro","Il Mondo"], c:0},
+  {q:"Qual é a melhor descrição do repertório deles?", a:["Canções italianas, clássicos e pop lírico","Só rap","Só eletrónica","Só punk rock"], c:0},
+  {q:"Qual música é uma das mais famosas do grupo?", a:["Grande Amore","Lose Yourself","Shape of You","Believer"], c:0}
 ];
 
 function startGame(){
-  player = document.getElementById("nameInput").value;
-  if(player==""){ alert("Escreve o nome!"); return; }
+  player = document.getElementById("nameInput").value.trim();
+  if(player === ""){
+    alert("Escreve o teu nome primeiro 😊");
+    return;
+  }
 
-  document.getElementById("music").play();
+  let music = document.getElementById("music");
+  music.volume = 0.6;
+  music.play().catch(() => {
+    alert("Carrega no play da música para ela começar 🎶");
+  });
 
-  document.getElementById("startScreen").style.display="none";
-  document.getElementById("quiz").style.display="block";
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("quiz").style.display = "block";
 
+  score = 0;
+  current = 0;
   showQuestion();
 }
 
 function showQuestion(){
-  let q = questions[current];
-  document.getElementById("question").innerText = (current+1)+"/20 - "+q.q;
+  answered = false;
+  timeLeft = 15;
 
-  let html="";
-  q.a.forEach((ans,i)=>{
-    let colors=["red","blue","yellow","green"];
-    html+=`<button class="${colors[i]}" onclick="answer(${i})">${ans}</button>`;
+  document.getElementById("progress").innerText = "Pergunta " + (current + 1) + " / " + questions.length;
+  document.getElementById("timer").innerText = "⏱️ Tempo: " + timeLeft;
+  document.getElementById("score").innerText = "⭐ Pontos: " + score;
+  document.getElementById("question").innerText = questions[current].q;
+  document.getElementById("feedback").innerText = "";
+
+  let colors = ["red","blue","yellow","green"];
+  let html = "";
+
+  questions[current].a.forEach((ans, i) => {
+    html += `<button class="${colors[i]}" onclick="answer(${i})">${ans}</button>`;
   });
 
-  document.getElementById("answers").innerHTML=html;
-  document.getElementById("score").innerText="Pontos: "+score;
+  document.getElementById("answers").innerHTML = html;
+
+  clearInterval(timer);
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = "⏱️ Tempo: " + timeLeft;
+
+    if(timeLeft <= 0){
+      clearInterval(timer);
+      timeOut();
+    }
+  }, 1000);
 }
 
 function answer(i){
-  if(i==questions[current].c) score++;
+  if(answered) return;
+  answered = true;
+  clearInterval(timer);
 
+  let correct = questions[current].c;
+  let buttons = document.querySelectorAll("#answers button");
+
+  if(i === correct){
+    buttons[i].classList.add("correct");
+    score++;
+    document.getElementById("feedback").innerText = "✅ Certo!";
+  } else {
+    buttons[i].classList.add("wrong");
+    buttons[correct].classList.add("correct");
+    document.getElementById("feedback").innerText = "❌ A correta era: " + questions[current].a[correct];
+  }
+
+  document.getElementById("score").innerText = "⭐ Pontos: " + score;
+
+  setTimeout(nextQuestion, 1400);
+}
+
+function timeOut(){
+  if(answered) return;
+  answered = true;
+
+  let correct = questions[current].c;
+  let buttons = document.querySelectorAll("#answers button");
+  buttons[correct].classList.add("correct");
+
+  document.getElementById("feedback").innerText = "⏰ Tempo esgotado!";
+
+  setTimeout(nextQuestion, 1400);
+}
+
+function nextQuestion(){
   current++;
 
-  if(current<questions.length){
+  if(current < questions.length){
     showQuestion();
   } else {
     endGame();
@@ -159,20 +269,24 @@ function answer(i){
 }
 
 function endGame(){
+  clearInterval(timer);
+
   ranking.push({name:player, score:score});
-  ranking.sort((a,b)=>b.score-a.score);
+  ranking.sort((a,b) => b.score - a.score);
+  ranking = ranking.slice(0, 5);
+  localStorage.setItem("rankingIlVolo", JSON.stringify(ranking));
 
-  localStorage.setItem("ranking", JSON.stringify(ranking));
+  document.getElementById("quiz").style.display = "none";
+  document.getElementById("end").style.display = "block";
 
-  document.getElementById("quiz").style.display="none";
-  document.getElementById("end").style.display="block";
-
-  let html="";
-  ranking.slice(0,5).forEach((p,i)=>{
-    html+=`<p>${i+1}º ${p.name} - ${p.score} pts</p>`;
+  let html = "";
+  ranking.forEach((p,i) => {
+    let medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "⭐";
+    html += `<p>${medal} ${i+1}º ${p.name} - ${p.score} pts</p>`;
   });
 
-  document.getElementById("ranking").innerHTML=html;
+  document.getElementById("ranking").innerHTML = html;
+  document.getElementById("finalResult").innerText = player + ", fizeste " + score + " / " + questions.length + " 🎉";
 
   confetti();
 }
@@ -182,23 +296,14 @@ function restart(){
 }
 
 function confetti(){
-  for(let i=0;i<50;i++){
-    let div=document.createElement("div");
-    div.style.position="fixed";
-    div.style.width="5px";
-    div.style.height="5px";
-    div.style.background="gold";
-    div.style.top="0px";
-    div.style.left=Math.random()*100+"%";
-    document.body.appendChild(div);
-
-    let fall=setInterval(()=>{
-      div.style.top=parseInt(div.style.top)+5+"px";
-      if(parseInt(div.style.top)>window.innerHeight){
-        clearInterval(fall);
-        div.remove();
-      }
-    },20);
+  for(let i=0; i<90; i++){
+    let c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = ["gold","white","#ffcc00","#ff4d4d","#4da6ff"][Math.floor(Math.random()*5)];
+    c.style.animationDuration = (Math.random()*2 + 2) + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
   }
 }
 </script>
