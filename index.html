@@ -19,7 +19,7 @@ h1{
 }
 
 #quizBox{
-  max-width:850px;
+  max-width:900px;
   margin:auto;
   padding:25px;
 }
@@ -38,13 +38,13 @@ h1{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:18px;
-  max-width:650px;
+  max-width:700px;
   margin:30px auto;
 }
 
 button{
   padding:18px;
-  font-size:20px;
+  font-size:19px;
   border:none;
   border-radius:16px;
   cursor:pointer;
@@ -69,13 +69,17 @@ button{
 #startBtn{
   background:gold;
   color:black;
-  width:260px;
+  width:280px;
   margin-top:20px;
 }
 
 #score{
   font-size:24px;
   margin-top:25px;
+}
+
+audio{
+  margin:15px;
 }
 </style>
 </head>
@@ -84,8 +88,8 @@ button{
 
 <h1>🎤 Il Volo Quiz 🎶</h1>
 
-<audio id="music" loop>
-  <source src="Il Volo - Grande amore.mp3" type="audio/mpeg">
+<audio id="music" controls loop>
+  <source src="Il%20Volo%20-%20Grande%20amore.mp3" type="audio/mpeg">
 </audio>
 
 <div id="quizBox">
@@ -108,52 +112,22 @@ button{
 let questions = [
   {
     q:"Quem são os três membros dos Il Volo?",
-    options:["Piero, Ignazio e Gianluca","Marco, Ignazio e Luca","Piero, Andrea e Matteo","Gianluca, Paolo e Ignazio"],
-    answer:0
-  },
-  {
-    q:"Qual foi a música com que venceram Sanremo em 2015?",
-    options:["Grande Amore","O Sole Mio","Musica che resta","Capolavoro"],
+    options:["Piero Barone, Ignazio Boschetto e Gianluca Ginoble","Marco, Luca e Paolo","Andrea, Matteo e Lorenzo","Piero, Eros e Tiziano"],
     answer:0
   },
   {
     q:"De que país são os Il Volo?",
-    options:["Espanha","Itália","França","Portugal"],
+    options:["Portugal","Itália","Espanha","França"],
     answer:1
   },
   {
-    q:"Qual destes nomes pertence aos Il Volo?",
-    options:["Piero Barone","Andrea Bocelli","Eros Ramazzotti","Tiziano Ferro"],
+    q:"Qual foi a música com que venceram Sanremo em 2015?",
+    options:["Grande Amore","Capolavoro","Musica che resta","Il Mondo"],
     answer:0
   },
   {
-    q:"Qual destes nomes pertence aos Il Volo?",
-    options:["Ignazio Boschetto","Luciano Pavarotti","Zucchero","Nek"],
-    answer:0
-  },
-  {
-    q:"Qual destes nomes pertence aos Il Volo?",
-    options:["Gianluca Ginoble","Marco Mengoni","Mahmood","Al Bano"],
-    answer:0
-  },
-  {
-    q:"Qual é o estilo musical mais associado aos Il Volo?",
-    options:["Pop lírico / crossover clássico","Rap","Heavy metal","Reggae"],
-    answer:0
-  },
-  {
-    q:"Em que festival italiano venceram com Grande Amore?",
-    options:["Festival de Sanremo","Eurovision","Festival de Veneza","Festival de Roma"],
-    answer:0
-  },
-  {
-    q:"Que música levou os Il Volo à Eurovisão em 2015?",
-    options:["Grande Amore","Nessun Dorma","Il Mondo","Ancora"],
-    answer:0
-  },
-  {
-    q:"Qual é uma música muito conhecida interpretada pelos Il Volo?",
-    options:["Il Mondo","Thriller","Shape of You","Bad Romance"],
+    q:"Em que festival italiano venceram em 2015?",
+    options:["Festival de Sanremo","Festival de Veneza","Festival de Roma","Festival de Milão"],
     answer:0
   },
   {
@@ -162,48 +136,78 @@ let questions = [
     answer:1
   },
   {
-    q:"Qual destes é conhecido como tenor no grupo?",
-    options:["Piero","Ed Sheeran","Bruno Mars","Elvis"],
+    q:"Quais são os tipos de voz dos três membros?",
+    options:["Piero e Ignazio são tenores, Gianluca é barítono","Todos são tenores","Todos são barítonos","Piero é soprano, Ignazio é tenor e Gianluca é baixo"],
     answer:0
   },
   {
-    q:"Qual destes é também tenor nos Il Volo?",
-    options:["Ignazio","Gianluca","Adele","Rihanna"],
+    q:"Qual é o estilo mais associado aos Il Volo?",
+    options:["Pop lírico / crossover clássico","Rap","Heavy metal","Reggae"],
     answer:0
   },
   {
-    q:"Gianluca é geralmente associado a que tipo de voz?",
-    options:["Barítono","Soprano","Contralto","Baixo profundo"],
+    q:"O nome 'Il Volo' significa aproximadamente:",
+    options:["O Voo","A Voz","O Amor","A Canção"],
+    answer:0
+  },
+  {
+    q:"Que música representou os Il Volo na Eurovisão de 2015?",
+    options:["Grande Amore","Nessun Dorma","O Sole Mio","Ancora"],
+    answer:0
+  },
+  {
+    q:"Qual destes temas é associado aos Il Volo?",
+    options:["Il Mondo","Despacito","Bad Romance","Shape of You"],
     answer:0
   },
   {
     q:"Qual destas canções é dos Il Volo?",
-    options:["Musica che resta","Despacito","Viva la Vida","Hello"],
+    options:["Musica che resta","Hello","Perfect","Imagine"],
     answer:0
   },
   {
     q:"Qual destas canções é dos Il Volo?",
-    options:["Capolavoro","Imagine","Yesterday","Perfect"],
+    options:["Capolavoro","Thriller","Viva la Vida","Billie Jean"],
     answer:0
   },
   {
-    q:"O nome 'Il Volo' em português significa aproximadamente:",
-    options:["O Voo","A Voz","O Canto","A Luz"],
+    q:"Em que programa italiano ficaram conhecidos ainda jovens?",
+    options:["Ti lascio una canzone","The Voice Portugal","Got Talent Espanha","X Factor UK"],
     answer:0
   },
   {
-    q:"Os Il Volo tornaram-se conhecidos ainda muito jovens em:",
-    options:["Ti lascio una canzone","The Voice","X Factor Portugal","Got Talent Espanha"],
+    q:"O que torna muitas atuações dos Il Volo especiais?",
+    options:["A harmonia entre três vozes","Dança hip-hop","DJ set eletrónico","Guitarras de heavy metal"],
     answer:0
   },
   {
-    q:"Qual destes é um tema muito romântico dos Il Volo?",
-    options:["Grande Amore","We Will Rock You","Smells Like Teen Spirit","Billie Jean"],
+    q:"Qual destes álbuns/projetos está associado aos Il Volo?",
+    options:["Il Volo sings Morricone","Midnights","Divide","After Hours"],
     answer:0
   },
   {
-    q:"Qual é a melhor descrição dos Il Volo?",
-    options:["Trio vocal italiano","Banda de rock inglesa","Grupo de dança espanhol","Dupla pop americana"],
+    q:"Que compositor italiano foi homenageado pelos Il Volo num projeto especial?",
+    options:["Ennio Morricone","Mozart","Beethoven","Vivaldi"],
+    answer:0
+  },
+  {
+    q:"Qual é uma característica visual comum nos concertos deles?",
+    options:["Elegância e ambiente clássico","Máscaras de terror","Roupa de futebol","Cenários de desenho animado"],
+    answer:0
+  },
+  {
+    q:"Qual destas frases combina melhor com Il Volo?",
+    options:["Trio vocal italiano de grande projeção internacional","Banda de rock inglesa","Dupla pop americana","Grupo de dança espanhol"],
+    answer:0
+  },
+  {
+    q:"Qual destas opções é uma canção romântica muito associada ao grupo?",
+    options:["Grande Amore","We Will Rock You","Smells Like Teen Spirit","Lose Yourself"],
+    answer:0
+  },
+  {
+    q:"Qual é a melhor descrição do repertório dos Il Volo?",
+    options:["Canções italianas, clássicos e pop lírico","Trap e rap urbano","Música eletrónica pura","Punk rock"],
     answer:0
   }
 ];
@@ -218,11 +222,14 @@ function startQuiz(){
   current = 0;
   score = 0;
   answered = false;
+
   document.getElementById("score").innerText = "Pontos: 0";
 
   let music = document.getElementById("music");
   music.volume = 0.35;
-  music.play();
+  music.play().catch(function(){
+    alert("Carrega no botão Play da música para ela começar 🎶");
+  });
 
   showQuestion();
 }
@@ -264,6 +271,7 @@ function checkAnswer(i){
     } else {
       document.getElementById("question").innerText = "Fim do Quiz! 🎉 Fizeste " + score + " em " + questions.length + "!";
       document.getElementById("progress").innerText = "Quiz terminado";
+
       buttons.forEach(btn => {
         btn.innerText = "";
         btn.disabled = true;
