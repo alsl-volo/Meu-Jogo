@@ -4,131 +4,273 @@
 <title>🎤 Il Volo Quiz</title>
 
 <style>
-body {
-    text-align: center;
-    font-family: Arial;
-    background: linear-gradient(to bottom, #0b1a3a, #000);
-    color: white;
+body{
+  margin:0;
+  text-align:center;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(to bottom,#071733,#000);
+  color:white;
 }
 
-h1 {
-    color: gold;
+h1{
+  color:gold;
+  font-size:42px;
+  margin-top:35px;
 }
 
-#quiz {
-    margin-top: 30px;
+#quizBox{
+  max-width:850px;
+  margin:auto;
+  padding:25px;
 }
 
-button {
-    width: 200px;
-    padding: 15px;
-    margin: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+#question{
+  font-size:28px;
+  margin:25px;
 }
 
-.correct { background: green; color: white; }
-.wrong { background: red; color: white; }
+#progress{
+  color:gold;
+  font-size:18px;
+}
 
-.option1 { background: #ff4d4d; }
-.option2 { background: #4da6ff; }
-.option3 { background: #ffd11a; color:black; }
-.option4 { background: #66ff66; color:black; }
+.answers{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  max-width:650px;
+  margin:30px auto;
+}
 
-#score {
-    font-size: 20px;
-    margin-top: 20px;
+button{
+  padding:18px;
+  font-size:20px;
+  border:none;
+  border-radius:16px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.option1{background:#ff4d4d;}
+.option2{background:#4da6ff;}
+.option3{background:#ffd11a;}
+.option4{background:#55ee55;}
+
+.correct{
+  background:#00a000 !important;
+  color:white;
+}
+
+.wrong{
+  background:#b00000 !important;
+  color:white;
+}
+
+#startBtn{
+  background:gold;
+  color:black;
+  width:260px;
+  margin-top:20px;
+}
+
+#score{
+  font-size:24px;
+  margin-top:25px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎤 Il Volo Quiz</h1>
+<h1>🎤 Il Volo Quiz 🎶</h1>
 
-<audio autoplay loop>
-    <source src="Il Volo - Grande amore.mp3" type="audio/mpeg">
+<audio id="music" loop>
+  <source src="Il Volo - Grande amore.mp3" type="audio/mpeg">
 </audio>
 
-<div id="quiz">
-    <h2 id="question">Carregue em começar!</h2>
+<div id="quizBox">
+  <div id="progress">Pergunta 0 / 20</div>
+  <h2 id="question">Clica em começar para iniciar o quiz!</h2>
 
-    <div>
-        <button class="option1" onclick="checkAnswer(0)"></button>
-        <button class="option2" onclick="checkAnswer(1)"></button>
-    </div>
-    <div>
-        <button class="option3" onclick="checkAnswer(2)"></button>
-        <button class="option4" onclick="checkAnswer(3)"></button>
-    </div>
+  <div class="answers">
+    <button class="option1" onclick="checkAnswer(0)"></button>
+    <button class="option2" onclick="checkAnswer(1)"></button>
+    <button class="option3" onclick="checkAnswer(2)"></button>
+    <button class="option4" onclick="checkAnswer(3)"></button>
+  </div>
 
-    <br><br>
-    <button onclick="startQuiz()">▶️ Começar</button>
+  <button id="startBtn" onclick="startQuiz()">▶️ Começar / Recomeçar</button>
 
-    <div id="score">Pontos: 0</div>
+  <div id="score">Pontos: 0</div>
 </div>
 
 <script>
 let questions = [
-{
-    q: "Quem são os membros dos Il Volo?",
-    options: ["Piero, Ignazio, Gianluca", "Marco, Luca, Paolo", "Luis, João, Pedro", "Bruno, Miguel, Tiago"],
-    answer: 0
-},
-{
-    q: "Em que ano ganharam Sanremo com Grande Amore?",
-    options: ["2012", "2015", "2018", "2020"],
-    answer: 1
-},
-{
-    q: "Quem é o mais novo?",
-    options: ["Piero", "Ignazio", "Gianluca", "Todos iguais"],
-    answer: 2
-}
+  {
+    q:"Quem são os três membros dos Il Volo?",
+    options:["Piero, Ignazio e Gianluca","Marco, Ignazio e Luca","Piero, Andrea e Matteo","Gianluca, Paolo e Ignazio"],
+    answer:0
+  },
+  {
+    q:"Qual foi a música com que venceram Sanremo em 2015?",
+    options:["Grande Amore","O Sole Mio","Musica che resta","Capolavoro"],
+    answer:0
+  },
+  {
+    q:"De que país são os Il Volo?",
+    options:["Espanha","Itália","França","Portugal"],
+    answer:1
+  },
+  {
+    q:"Qual destes nomes pertence aos Il Volo?",
+    options:["Piero Barone","Andrea Bocelli","Eros Ramazzotti","Tiziano Ferro"],
+    answer:0
+  },
+  {
+    q:"Qual destes nomes pertence aos Il Volo?",
+    options:["Ignazio Boschetto","Luciano Pavarotti","Zucchero","Nek"],
+    answer:0
+  },
+  {
+    q:"Qual destes nomes pertence aos Il Volo?",
+    options:["Gianluca Ginoble","Marco Mengoni","Mahmood","Al Bano"],
+    answer:0
+  },
+  {
+    q:"Qual é o estilo musical mais associado aos Il Volo?",
+    options:["Pop lírico / crossover clássico","Rap","Heavy metal","Reggae"],
+    answer:0
+  },
+  {
+    q:"Em que festival italiano venceram com Grande Amore?",
+    options:["Festival de Sanremo","Eurovision","Festival de Veneza","Festival de Roma"],
+    answer:0
+  },
+  {
+    q:"Que música levou os Il Volo à Eurovisão em 2015?",
+    options:["Grande Amore","Nessun Dorma","Il Mondo","Ancora"],
+    answer:0
+  },
+  {
+    q:"Qual é uma música muito conhecida interpretada pelos Il Volo?",
+    options:["Il Mondo","Thriller","Shape of You","Bad Romance"],
+    answer:0
+  },
+  {
+    q:"Quantos membros tem o grupo Il Volo?",
+    options:["2","3","4","5"],
+    answer:1
+  },
+  {
+    q:"Qual destes é conhecido como tenor no grupo?",
+    options:["Piero","Ed Sheeran","Bruno Mars","Elvis"],
+    answer:0
+  },
+  {
+    q:"Qual destes é também tenor nos Il Volo?",
+    options:["Ignazio","Gianluca","Adele","Rihanna"],
+    answer:0
+  },
+  {
+    q:"Gianluca é geralmente associado a que tipo de voz?",
+    options:["Barítono","Soprano","Contralto","Baixo profundo"],
+    answer:0
+  },
+  {
+    q:"Qual destas canções é dos Il Volo?",
+    options:["Musica che resta","Despacito","Viva la Vida","Hello"],
+    answer:0
+  },
+  {
+    q:"Qual destas canções é dos Il Volo?",
+    options:["Capolavoro","Imagine","Yesterday","Perfect"],
+    answer:0
+  },
+  {
+    q:"O nome 'Il Volo' em português significa aproximadamente:",
+    options:["O Voo","A Voz","O Canto","A Luz"],
+    answer:0
+  },
+  {
+    q:"Os Il Volo tornaram-se conhecidos ainda muito jovens em:",
+    options:["Ti lascio una canzone","The Voice","X Factor Portugal","Got Talent Espanha"],
+    answer:0
+  },
+  {
+    q:"Qual destes é um tema muito romântico dos Il Volo?",
+    options:["Grande Amore","We Will Rock You","Smells Like Teen Spirit","Billie Jean"],
+    answer:0
+  },
+  {
+    q:"Qual é a melhor descrição dos Il Volo?",
+    options:["Trio vocal italiano","Banda de rock inglesa","Grupo de dança espanhol","Dupla pop americana"],
+    answer:0
+  }
 ];
 
 let current = 0;
 let score = 0;
+let answered = false;
 
-function startQuiz() {
-    current = 0;
-    score = 0;
-    showQuestion();
+let buttons = document.querySelectorAll(".option1, .option2, .option3, .option4");
+
+function startQuiz(){
+  current = 0;
+  score = 0;
+  answered = false;
+  document.getElementById("score").innerText = "Pontos: 0";
+
+  let music = document.getElementById("music");
+  music.volume = 0.35;
+  music.play();
+
+  showQuestion();
 }
 
-function showQuestion() {
-    document.getElementById("question").innerText = questions[current].q;
+function showQuestion(){
+  answered = false;
 
-    let buttons = document.querySelectorAll("button.option1, button.option2, button.option3, button.option4");
+  document.getElementById("progress").innerText = "Pergunta " + (current + 1) + " / " + questions.length;
+  document.getElementById("question").innerText = questions[current].q;
 
-    buttons.forEach((btn, i) => {
-        btn.innerText = questions[current].options[i];
-        btn.classList.remove("correct", "wrong");
-    });
+  buttons.forEach((btn, i) => {
+    btn.innerText = questions[current].options[i];
+    btn.classList.remove("correct","wrong");
+    btn.disabled = false;
+  });
 }
 
-function checkAnswer(i) {
-    let buttons = document.querySelectorAll("button.option1, button.option2, button.option3, button.option4");
+function checkAnswer(i){
+  if(answered) return;
+  answered = true;
 
-    if (i === questions[current].answer) {
-        buttons[i].classList.add("correct");
-        score++;
+  let correct = questions[current].answer;
+
+  if(i === correct){
+    buttons[i].classList.add("correct");
+    score++;
+  } else {
+    buttons[i].classList.add("wrong");
+    buttons[correct].classList.add("correct");
+  }
+
+  document.getElementById("score").innerText = "Pontos: " + score;
+
+  setTimeout(() => {
+    current++;
+
+    if(current < questions.length){
+      showQuestion();
     } else {
-        buttons[i].classList.add("wrong");
+      document.getElementById("question").innerText = "Fim do Quiz! 🎉 Fizeste " + score + " em " + questions.length + "!";
+      document.getElementById("progress").innerText = "Quiz terminado";
+      buttons.forEach(btn => {
+        btn.innerText = "";
+        btn.disabled = true;
+        btn.classList.remove("correct","wrong");
+      });
     }
-
-    document.getElementById("score").innerText = "Pontos: " + score;
-
-    setTimeout(() => {
-        current++;
-        if (current < questions.length) {
-            showQuestion();
-        } else {
-            document.getElementById("question").innerText = "Fim do Quiz! 🎉";
-        }
-    }, 1000);
+  }, 1200);
 }
 </script>
 
