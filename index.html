@@ -17,15 +17,15 @@ body{
   min-height:100vh;
   padding:22px;
   background:
-    radial-gradient(circle at 20% 10%, rgba(255,215,0,0.30), transparent 28%),
-    radial-gradient(circle at 80% 15%, rgba(255,215,0,0.22), transparent 30%),
-    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.82));
+    radial-gradient(circle at 20% 10%, rgba(255,215,0,0.32), transparent 28%),
+    radial-gradient(circle at 80% 15%, rgba(255,215,0,0.25), transparent 30%),
+    linear-gradient(rgba(0,0,0,0.52), rgba(0,0,0,0.82));
 }
 
 h1{
   color:gold;
   font-size:44px;
-  text-shadow:0 0 15px gold, 0 0 30px black;
+  text-shadow:0 0 18px gold, 0 0 35px black;
   margin-top:25px;
 }
 
@@ -41,9 +41,9 @@ h1{
   border-radius:28px;
   padding:26px;
   margin:28px auto;
-  max-width:720px;
-  box-shadow:0 0 35px rgba(255,215,0,0.8);
-  border:1px solid rgba(255,215,0,0.65);
+  max-width:760px;
+  box-shadow:0 0 38px rgba(255,215,0,0.85);
+  border:1px solid rgba(255,215,0,0.7);
   backdrop-filter:blur(4px);
 }
 
@@ -140,20 +140,24 @@ input{
   font-size:25px;
   color:gold;
   font-weight:bold;
+  white-space:pre-line;
 }
 
-.confetti{
+.sparkle{
   position:fixed;
-  top:-10px;
-  width:10px;
-  height:10px;
-  z-index:999;
-  animation:fall 3.5s linear forwards;
+  top:-15px;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  z-index:9999;
+  animation:fall linear forwards;
+  box-shadow:0 0 15px white;
 }
 
 @keyframes fall{
   to{
-    transform:translateY(110vh) rotate(360deg);
+    transform:translateY(110vh) rotate(720deg);
+    opacity:0;
   }
 }
 
@@ -225,7 +229,17 @@ let perguntas=[
 {q:"Qual palavra combina melhor com Il Volo?",a:["Romantismo","Terror","Agressividade","Comédia"],c:0},
 {q:"Qual destas NÃO é dos Il Volo?",a:["Thriller","Grande Amore","Capolavoro","Il Mondo"],c:0},
 {q:"Qual é a melhor descrição do repertório deles?",a:["Canções italianas, clássicos e pop lírico","Só rap","Só eletrónica","Só punk rock"],c:0},
-{q:"Qual música é uma das mais famosas do grupo?",a:["Grande Amore","Lose Yourself","Shape of You","Believer"],c:0}
+{q:"Qual música é uma das mais famosas do grupo?",a:["Grande Amore","Lose Yourself","Shape of You","Believer"],c:0},
+{q:"Qual destes é o apelido de Piero?",a:["Barone","Ginoble","Boschetto","Bocelli"],c:0},
+{q:"Qual destes é o apelido de Ignazio?",a:["Boschetto","Barone","Ginoble","Ramazzotti"],c:0},
+{q:"Qual destes é o apelido de Gianluca?",a:["Ginoble","Boschetto","Barone","Mengoni"],c:0},
+{q:"Qual destas músicas tem uma ligação forte ao romantismo do grupo?",a:["Grande Amore","Smells Like Teen Spirit","Lose Yourself","Bad Guy"],c:0},
+{q:"Il Volo mistura música clássica com:",a:["Pop","Trap pesado","Punk","Techno"],c:0},
+{q:"Qual destas opções combina melhor com o palco dos Il Volo?",a:["Orquestra, elegância e vozes fortes","DJ e luzes de discoteca","Rap battle","Dança hip-hop"],c:0},
+{q:"Em que idioma cantam muitas das suas músicas?",a:["Italiano","Japonês","Alemão","Russo"],c:0},
+{q:"Qual destas canções é ligada ao projeto Morricone?",a:["The Ecstasy of Gold","Thriller","Umbrella","Toxic"],c:0},
+{q:"Qual é o tipo de grupo dos Il Volo?",a:["Trio vocal","Banda de guitarras","Dupla eletrónica","Grupo de dança"],c:0},
+{q:"Quem costuma cantar com voz mais grave no trio?",a:["Gianluca","Piero","Ignazio","Nenhum"],c:0}
 ];
 
 let atual=0;
@@ -309,26 +323,27 @@ function fim(){
   document.getElementById("fimBox").classList.remove("hidden");
 
   let msg="";
-  if(pontos>=18){ msg="🏆 Fantástico! És uma verdadeira fã dos Il Volo!"; }
-  else if(pontos>=14){ msg="✨ Muito bom! Conheces muito bem o trio!"; }
-  else if(pontos>=10){ msg="🎶 Bom resultado! Continua a jogar!"; }
+  if(pontos>=27){ msg="🏆 Fantástico! És uma verdadeira fã dos Il Volo!"; }
+  else if(pontos>=22){ msg="✨ Muito bom! Conheces muito bem o trio!"; }
+  else if(pontos>=15){ msg="🎶 Bom resultado! Continua a jogar!"; }
   else{ msg="💙 Continua a treinar, Volover!"; }
 
   document.getElementById("resultado").innerText =
     nome+" fez "+pontos+" pontos de "+perguntas.length+" 🎉\n"+msg;
 
-  confetti();
+  brilhosFinais();
 }
 
-function confetti(){
-  for(let i=0;i<100;i++){
-    let c=document.createElement("div");
-    c.className="confetti";
-    c.style.left=Math.random()*100+"vw";
-    c.style.background=["gold","white","#ffcc00","#ff4d4d","#4da6ff"][Math.floor(Math.random()*5)];
-    c.style.animationDuration=(Math.random()*2+2)+"s";
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),4000);
+function brilhosFinais(){
+  for(let i=0;i<160;i++){
+    let s=document.createElement("div");
+    s.className="sparkle";
+    s.style.left=Math.random()*100+"vw";
+    s.style.background=["gold","#fff2a0","white","#ff4d4d","#4da6ff"][Math.floor(Math.random()*5)];
+    s.style.animationDuration=(Math.random()*3+2)+"s";
+    s.style.animationDelay=(Math.random()*0.8)+"s";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),6000);
   }
 }
 </script>
