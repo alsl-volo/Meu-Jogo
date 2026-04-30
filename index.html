@@ -5,97 +5,87 @@
 <title>🎤 Il Volo Quiz</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  text-align: center;
-  color: white;
-  background: url("fundo.jpg.jpg") center/cover no-repeat fixed;
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  text-align:center;
+  color:white;
+  background:url("fundo.jpg.jpg") center/cover no-repeat fixed;
 }
 
-.overlay {
-  background: rgba(0,0,0,0.75);
-  min-height: 100vh;
-  padding: 20px;
+.overlay{
+  background:rgba(0,0,0,0.72);
+  min-height:100vh;
+  padding:20px;
 }
 
-h1 {
-  color: gold;
-  text-shadow: 0 0 20px gold;
+h1{
+  color:gold;
+  text-shadow:0 0 18px gold, 0 0 8px black;
 }
 
-/* Caixa principal */
-.box {
-  background: rgba(0,0,0,0.85);
-  border-radius: 20px;
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 600px;
-  box-shadow: 0 0 30px gold;
+.box{
+  background:rgba(0,0,0,0.82);
+  border-radius:22px;
+  padding:22px;
+  margin:25px auto;
+  max-width:650px;
+  box-shadow:0 0 28px gold;
+  border:1px solid rgba(255,215,0,0.5);
 }
 
-/* Botões respostas */
-button {
-  display: block;
-  width: 80%;
-  margin: 10px auto;
-  padding: 15px;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: 0.2s;
+button{
+  display:block;
+  width:80%;
+  margin:12px auto;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  font-size:18px;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-button:hover {
-  transform: scale(1.05);
+.red{background:#ff4d4d;}
+.blue{background:#4da6ff;}
+.yellow{background:#ffd11a;color:black;}
+.green{background:#5cd65c;color:black;}
+
+.start{
+  background:gold;
+  color:black;
 }
 
-.red { background: #ff4d4d; }
-.blue { background: #4da6ff; }
-.yellow { background: #ffd11a; color:black;}
-.green { background: #5cd65c; }
-
-.start {
-  background: gold;
-  color: black;
-  font-weight: bold;
+input{
+  padding:12px;
+  border-radius:12px;
+  border:2px solid gold;
+  font-size:17px;
+  text-align:center;
 }
 
-/* Input */
-input {
-  padding: 10px;
-  border-radius: 10px;
-  border: 2px solid gold;
-  font-size: 16px;
+.hidden{display:none;}
+
+/* BOTÃO MÚSICA PREMIUM */
+.musicBtn{
+  position:fixed;
+  top:18px;
+  right:18px;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:rgba(0,0,0,0.75);
+  color:gold;
+  font-size:24px;
+  box-shadow:0 0 18px gold;
+  border:none;
+  cursor:pointer;
 }
 
-/* Botão música PREMIUM */
-.musicBtn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-
-  background: rgba(0,0,0,0.7);
-  color: gold;
-
-  box-shadow: 0 0 15px gold;
-  transition: 0.3s;
-}
-
-.musicBtn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 25px gold;
-}
-
-.hidden {
-  display: none;
+.musicBtn.on{
+  background:gold;
+  color:black;
+  box-shadow:0 0 28px gold;
 }
 </style>
 </head>
@@ -105,24 +95,19 @@ input {
 
 <h1>🎤 Il Volo Quiz 🎶</h1>
 
-<!-- BOTÃO MÚSICA -->
-<button class="musicBtn" onclick="toggleMusic()" id="musicBtn">
-🔇
-</button>
+<button class="musicBtn" id="musicBtn" onclick="toggleMusic()">▶️</button>
 
-<!-- ÁUDIO -->
 <audio id="musica" loop>
   <source src="Il Volo - Il Mondo.mp3" type="audio/mpeg">
 </audio>
 
-<!-- INÍCIO -->
 <div class="box" id="startBox">
   <h2>Introduz o teu nome 👇</h2>
-  <input id="nome" placeholder="Nome"><br><br>
+  <input id="nome" placeholder="Nome">
+  <br><br>
   <button class="start" onclick="startGame()">▶️ Começar</button>
 </div>
 
-<!-- QUIZ -->
 <div class="box hidden" id="quizBox">
   <h3 id="contador"></h3>
   <h2 id="pergunta"></h2>
@@ -133,105 +118,96 @@ input {
   <button class="green" onclick="responder(3)" id="a3"></button>
 </div>
 
-<!-- FIM -->
 <div class="box hidden" id="fimBox">
   <h2>🏆 Resultado Final</h2>
   <p id="resultado"></p>
-  <button class="start" onclick="location.reload()">Jogar outra vez</button>
+  <button class="start" onclick="location.reload()">🔁 Jogar outra vez</button>
 </div>
 
 </div>
 
 <script>
 
-/* PERGUNTAS */
-let perguntas = [
-{q:"De que país são os Il Volo?", a:["Portugal","Itália","França","Espanha"], c:1},
-{q:"Quantos membros tem o grupo?", a:["2","3","4","5"], c:1},
-{q:"Qual destas músicas é deles?", a:["Grande Amore","Thriller","Hello","Despacito"], c:0},
-{q:"Qual estilo musical?", a:["Rock","Ópera Pop","Rap","Jazz"], c:1},
-{q:"Quem são os membros?", a:["Piero, Ignazio e Gianluca","Luis, Marco e Pedro","John, Mike e Alex","Carlos, Rui e Tiago"], c:0},
-{q:"Qual destas é deles?", a:["Il Mondo","Halo","Shape of You","Bad Romance"], c:0},
-{q:"Em que concurso apareceram?", a:["X Factor","The Voice","Ti Lascio una Canzone","Big Brother"], c:2},
-{q:"Ano de formação?", a:["2009","2015","2000","1995"], c:0},
-{q:"Quem é Piero?", a:["Tenor","DJ","Produtor","Ator"], c:0},
-{q:"Quem é Ignazio?", a:["Tenor","Baterista","Pianista","Guitarrista"], c:0},
-{q:"Quem é Gianluca?", a:["Tenor","Rapper","Ator","Comediante"], c:0},
-{q:"Cantam em que língua?", a:["Italiano","Inglês","Ambas","Nenhuma"], c:2},
-{q:"Ganharam Sanremo com?", a:["Grande Amore","Il Mondo","Capolavoro","O Sole Mio"], c:0},
-{q:"Qual NÃO é deles?", a:["Thriller","Grande Amore","Il Mondo","Capolavoro"], c:0}
+let perguntas=[
+{q:"De que país são os Il Volo?",a:["Portugal","Itália","França","Espanha"],c:1},
+{q:"Quantos membros tem o grupo?",a:["2","3","4","5"],c:1},
+{q:"Quem são os membros?",a:["Piero, Ignazio e Gianluca","Marco, Luca e Paolo","Eros, Nek e Tiziano","Andrea, Matteo e Lorenzo"],c:0},
+{q:"Qual música venceu Sanremo 2015?",a:["Grande Amore","Il Mondo","Capolavoro","Musica che resta"],c:0},
+{q:"Que estilo é mais associado aos Il Volo?",a:["Pop lírico","Rap","Rock pesado","Reggae"],c:0},
+{q:"O nome 'Il Volo' significa:",a:["O Voo","A Voz","O Amor","A Luz"],c:0},
+{q:"Que música levaram à Eurovisão em 2015?",a:["Grande Amore","Perfect","Hello","Imagine"],c:0},
+{q:"Onde ficaram conhecidos?",a:["Ti lascio una canzone","The Voice","Got Talent","X Factor"],c:0},
+{q:"Qual destas músicas é deles?",a:["Il Mondo","Thriller","Bad Romance","Despacito"],c:0},
+{q:"Qual destas NÃO é deles?",a:["Thriller","Grande Amore","Capolavoro","Il Mondo"],c:0}
 ];
 
-let atual = 0;
-let pontos = 0;
-let nome = "";
-let musicaOn = false;
+let atual=0;
+let pontos=0;
+let nome="";
+let musicaOn=false;
 
-/* COMEÇAR */
+function toggleMusic(){
+  let audio=document.getElementById("musica");
+  let btn=document.getElementById("musicBtn");
+
+  if(!musicaOn){
+    audio.volume=0.6;
+    audio.play();
+    btn.innerText="⏸️";
+    btn.classList.add("on");
+    musicaOn=true;
+  }else{
+    audio.pause();
+    btn.innerText="▶️";
+    btn.classList.remove("on");
+    musicaOn=false;
+  }
+}
+
 function startGame(){
-  nome = document.getElementById("nome").value || "Jogador";
+  nome=document.getElementById("nome").value || "Jogador";
 
   document.getElementById("startBox").classList.add("hidden");
   document.getElementById("quizBox").classList.remove("hidden");
 
-  // Toca música ao iniciar
-  toggleMusic();
+  if(!musicaOn){
+    toggleMusic();
+  }
 
   mostrar();
 }
 
-/* MOSTRAR PERGUNTA */
 function mostrar(){
-  let p = perguntas[atual];
+  let p=perguntas[atual];
 
-  document.getElementById("contador").innerText =
-    "Pergunta " + (atual+1) + " / " + perguntas.length;
-
-  document.getElementById("pergunta").innerText = p.q;
+  document.getElementById("contador").innerText="Pergunta "+(atual+1)+" / "+perguntas.length;
+  document.getElementById("pergunta").innerText=p.q;
 
   for(let i=0;i<4;i++){
-    document.getElementById("a"+i).innerText = p.a[i];
+    document.getElementById("a"+i).innerText=p.a[i];
   }
 }
 
-/* RESPONDER */
 function responder(i){
-  if(i === perguntas[atual].c){
+  if(i===perguntas[atual].c){
     pontos++;
   }
 
   atual++;
 
-  if(atual < perguntas.length){
+  if(atual<perguntas.length){
     mostrar();
-  } else {
+  }else{
     fim();
   }
 }
 
-/* FIM */
 function fim(){
   document.getElementById("quizBox").classList.add("hidden");
   document.getElementById("fimBox").classList.remove("hidden");
 
   document.getElementById("resultado").innerText =
-    nome + " fez " + pontos + " pontos de " + perguntas.length + " 🎉";
-}
-
-/* BOTÃO MÚSICA PREMIUM */
-function toggleMusic(){
-  let audio = document.getElementById("musica");
-  let btn = document.getElementById("musicBtn");
-
-  if(!musicaOn){
-    audio.play();
-    btn.innerText = "🔊";
-    musicaOn = true;
-  } else {
-    audio.pause();
-    btn.innerText = "🔇";
-    musicaOn = false;
-  }
+    nome+" fez "+pontos+" pontos de "+perguntas.length+" 🎉";
 }
 
 </script>
