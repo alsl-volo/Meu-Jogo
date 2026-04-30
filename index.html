@@ -26,12 +26,10 @@ h1 {
 }
 
 .note {
-    width: 50px;
-    height: 50px;
-    background: gold;
     position: absolute;
     top: 0;
-    border-radius: 10px;
+    color: gold;
+    font-weight: bold;
 }
 
 #zone {
@@ -56,7 +54,7 @@ button {
 <body>
 
 <h1>🎶 Il Volo Rhythm 🎶</h1>
-<p>Carrega SPACE quando a nota chega ao verde</p>
+<p>Carrega SPACE quando o nome chega ao verde</p>
 
 <button onclick="startGame()">Iniciar</button>
 <button onclick="pauseGame()">Pausar</button>
@@ -67,10 +65,17 @@ button {
     <div id="zone"></div>
 </div>
 
+<!-- Música (YouTube escondido) -->
+<iframe width="0" height="0"
+src="https://www.youtube.com/embed/w1f6o1HQBvg?autoplay=1&loop=1&playlist=w1f6o1HQBvg"
+frameborder="0" allow="autoplay"></iframe>
+
 <script>
 let game = document.getElementById("game");
 let score = 0;
 let running = false;
+
+let names = ["Piero", "Ignazio", "Gianluca"];
 
 function startGame() {
     running = true;
@@ -85,7 +90,9 @@ function createNote() {
 
     let note = document.createElement("div");
     note.classList.add("note");
-    note.style.left = Math.random() * 250 + "px";
+
+    note.innerText = names[Math.floor(Math.random() * names.length)];
+    note.style.left = Math.random() * 200 + "px";
 
     game.appendChild(note);
 
