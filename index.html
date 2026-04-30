@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<title>🎤 Il Volo Quiz</title>
+<title>🎤 Il Volo Quiz - Palco Final</title>
 
 <style>
 body{
@@ -14,78 +14,153 @@ body{
 }
 
 .overlay{
-  background:rgba(0,0,0,0.72);
   min-height:100vh;
-  padding:20px;
+  padding:22px;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,215,0,0.30), transparent 28%),
+    radial-gradient(circle at 80% 15%, rgba(255,215,0,0.22), transparent 30%),
+    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.82));
 }
 
 h1{
   color:gold;
-  text-shadow:0 0 18px gold, 0 0 8px black;
+  font-size:44px;
+  text-shadow:0 0 15px gold, 0 0 30px black;
+  margin-top:25px;
+}
+
+.subtitle{
+  color:#ffeaa0;
+  font-size:18px;
+  margin-top:-10px;
+  text-shadow:0 0 8px black;
 }
 
 .box{
-  background:rgba(0,0,0,0.82);
-  border-radius:22px;
-  padding:22px;
-  margin:25px auto;
-  max-width:650px;
-  box-shadow:0 0 28px gold;
-  border:1px solid rgba(255,215,0,0.5);
+  background:rgba(0,0,0,0.76);
+  border-radius:28px;
+  padding:26px;
+  margin:28px auto;
+  max-width:720px;
+  box-shadow:0 0 35px rgba(255,215,0,0.8);
+  border:1px solid rgba(255,215,0,0.65);
+  backdrop-filter:blur(4px);
 }
 
 button{
   display:block;
-  width:80%;
-  margin:12px auto;
-  padding:15px;
+  width:82%;
+  margin:13px auto;
+  padding:16px;
   border:none;
-  border-radius:14px;
+  border-radius:18px;
   font-size:18px;
   font-weight:bold;
   cursor:pointer;
+  transition:0.25s;
+  box-shadow:0 0 14px rgba(0,0,0,0.5);
 }
 
-.red{background:#ff4d4d;}
-.blue{background:#4da6ff;}
-.yellow{background:#ffd11a;color:black;}
-.green{background:#5cd65c;color:black;}
+button:hover{
+  transform:scale(1.04);
+  box-shadow:0 0 22px gold;
+}
+
+.red{background:#e84b4b;color:white;}
+.blue{background:#2f9cff;color:white;}
+.yellow{background:#ffd21f;color:black;}
+.green{background:#45d96b;color:black;}
 
 .start{
-  background:gold;
+  background:linear-gradient(135deg,gold,#fff2a0);
   color:black;
 }
 
 input{
-  padding:12px;
-  border-radius:12px;
+  padding:13px;
+  border-radius:14px;
   border:2px solid gold;
   font-size:17px;
   text-align:center;
+  background:rgba(255,255,255,0.9);
 }
 
 .hidden{display:none;}
 
-/* BOTÃO MÚSICA PREMIUM */
 .musicBtn{
   position:fixed;
   top:18px;
   right:18px;
-  width:58px;
-  height:58px;
+  width:60px;
+  height:60px;
   border-radius:50%;
-  background:rgba(0,0,0,0.75);
+  background:rgba(0,0,0,0.72);
   color:gold;
   font-size:24px;
   box-shadow:0 0 18px gold;
-  border:none;
-  cursor:pointer;
+  border:1px solid rgba(255,215,0,0.8);
+  z-index:20;
 }
 
 .musicBtn.on{
   background:gold;
   color:black;
-  box-shadow:0 0 28px gold;
+  box-shadow:0 0 35px gold;
+}
+
+#contador{
+  color:gold;
+  font-size:20px;
+}
+
+#pergunta{
+  font-size:28px;
+  text-shadow:0 0 10px black;
+}
+
+.correct{
+  background:#00a000 !important;
+  color:white !important;
+  box-shadow:0 0 25px #00ff66 !important;
+}
+
+.wrong{
+  background:#b00000 !important;
+  color:white !important;
+  box-shadow:0 0 25px red !important;
+}
+
+#feedback{
+  font-size:22px;
+  min-height:30px;
+  color:#ffeaa0;
+}
+
+#resultado{
+  font-size:25px;
+  color:gold;
+  font-weight:bold;
+}
+
+.confetti{
+  position:fixed;
+  top:-10px;
+  width:10px;
+  height:10px;
+  z-index:999;
+  animation:fall 3.5s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+  }
+}
+
+@media(max-width:700px){
+  h1{font-size:34px;}
+  .box{width:88%; padding:20px;}
+  button{width:92%;}
 }
 </style>
 </head>
@@ -94,6 +169,7 @@ input{
 <div class="overlay">
 
 <h1>🎤 Il Volo Quiz 🎶</h1>
+<div class="subtitle">✨ Versão palco final ✨</div>
 
 <button class="musicBtn" id="musicBtn" onclick="toggleMusic()">▶️</button>
 
@@ -105,7 +181,7 @@ input{
   <h2>Introduz o teu nome 👇</h2>
   <input id="nome" placeholder="Nome">
   <br><br>
-  <button class="start" onclick="startGame()">▶️ Começar</button>
+  <button class="start" onclick="startGame()">▶️ Começar o Quiz</button>
 </div>
 
 <div class="box hidden" id="quizBox">
@@ -116,10 +192,12 @@ input{
   <button class="blue" onclick="responder(1)" id="a1"></button>
   <button class="yellow" onclick="responder(2)" id="a2"></button>
   <button class="green" onclick="responder(3)" id="a3"></button>
+
+  <div id="feedback"></div>
 </div>
 
 <div class="box hidden" id="fimBox">
-  <h2>🏆 Resultado Final</h2>
+  <h2>🏆 Resultado Final 🏆</h2>
   <p id="resultado"></p>
   <button class="start" onclick="location.reload()">🔁 Jogar outra vez</button>
 </div>
@@ -127,31 +205,41 @@ input{
 </div>
 
 <script>
-
 let perguntas=[
 {q:"De que país são os Il Volo?",a:["Portugal","Itália","França","Espanha"],c:1},
 {q:"Quantos membros tem o grupo?",a:["2","3","4","5"],c:1},
-{q:"Quem são os membros?",a:["Piero, Ignazio e Gianluca","Marco, Luca e Paolo","Eros, Nek e Tiziano","Andrea, Matteo e Lorenzo"],c:0},
+{q:"Quem são os membros dos Il Volo?",a:["Piero, Ignazio e Gianluca","Marco, Luca e Paolo","Eros, Nek e Tiziano","Andrea, Matteo e Lorenzo"],c:0},
 {q:"Qual música venceu Sanremo 2015?",a:["Grande Amore","Il Mondo","Capolavoro","Musica che resta"],c:0},
-{q:"Que estilo é mais associado aos Il Volo?",a:["Pop lírico","Rap","Rock pesado","Reggae"],c:0},
+{q:"Que estilo é mais associado aos Il Volo?",a:["Pop lírico / crossover clássico","Rap","Rock pesado","Reggae"],c:0},
 {q:"O nome 'Il Volo' significa:",a:["O Voo","A Voz","O Amor","A Luz"],c:0},
 {q:"Que música levaram à Eurovisão em 2015?",a:["Grande Amore","Perfect","Hello","Imagine"],c:0},
-{q:"Onde ficaram conhecidos?",a:["Ti lascio una canzone","The Voice","Got Talent","X Factor"],c:0},
-{q:"Qual destas músicas é deles?",a:["Il Mondo","Thriller","Bad Romance","Despacito"],c:0},
-{q:"Qual destas NÃO é deles?",a:["Thriller","Grande Amore","Capolavoro","Il Mondo"],c:0}
+{q:"Onde ficaram conhecidos ainda jovens?",a:["Ti lascio una canzone","The Voice","Got Talent","X Factor UK"],c:0},
+{q:"Qual destas músicas é muito associada ao grupo?",a:["Il Mondo","Thriller","Bad Romance","Despacito"],c:0},
+{q:"Qual destas foi apresentada em Sanremo 2024?",a:["Capolavoro","Billie Jean","Viva la Vida","Halo"],c:0},
+{q:"Qual destas canções é dos Il Volo?",a:["Musica che resta","Rolling in the Deep","Radioactive","Shallow"],c:0},
+{q:"Que compositor homenagearam num projeto especial?",a:["Ennio Morricone","Mozart","Beethoven","Bach"],c:0},
+{q:"Quais são os tipos de voz do trio?",a:["Piero e Ignazio são tenores; Gianluca é barítono","Todos são tenores","Todos são barítonos","Todos são baixos"],c:0},
+{q:"Qual deles é barítono?",a:["Gianluca","Piero","Ignazio","Nenhum"],c:0},
+{q:"Qual frase define melhor o grupo?",a:["Trio vocal italiano de projeção internacional","Banda rock inglesa","DJ eletrónico","Grupo de dança espanhol"],c:0},
+{q:"Qual é uma característica dos concertos deles?",a:["Elegância e ambiente clássico","Máscaras de terror","Roupa de futebol","Cenário de videojogo"],c:0},
+{q:"Qual palavra combina melhor com Il Volo?",a:["Romantismo","Terror","Agressividade","Comédia"],c:0},
+{q:"Qual destas NÃO é dos Il Volo?",a:["Thriller","Grande Amore","Capolavoro","Il Mondo"],c:0},
+{q:"Qual é a melhor descrição do repertório deles?",a:["Canções italianas, clássicos e pop lírico","Só rap","Só eletrónica","Só punk rock"],c:0},
+{q:"Qual música é uma das mais famosas do grupo?",a:["Grande Amore","Lose Yourself","Shape of You","Believer"],c:0}
 ];
 
 let atual=0;
 let pontos=0;
 let nome="";
 let musicaOn=false;
+let bloqueado=false;
 
 function toggleMusic(){
   let audio=document.getElementById("musica");
   let btn=document.getElementById("musicBtn");
 
   if(!musicaOn){
-    audio.volume=0.6;
+    audio.volume=0.65;
     audio.play();
     btn.innerText="⏸️";
     btn.classList.add("on");
@@ -165,51 +253,84 @@ function toggleMusic(){
 }
 
 function startGame(){
-  nome=document.getElementById("nome").value || "Jogador";
+  nome=document.getElementById("nome").value.trim() || "Jogador";
 
   document.getElementById("startBox").classList.add("hidden");
   document.getElementById("quizBox").classList.remove("hidden");
 
-  if(!musicaOn){
-    toggleMusic();
-  }
+  if(!musicaOn){ toggleMusic(); }
 
   mostrar();
 }
 
 function mostrar(){
+  bloqueado=false;
   let p=perguntas[atual];
 
   document.getElementById("contador").innerText="Pergunta "+(atual+1)+" / "+perguntas.length;
   document.getElementById("pergunta").innerText=p.q;
+  document.getElementById("feedback").innerText="";
 
   for(let i=0;i<4;i++){
-    document.getElementById("a"+i).innerText=p.a[i];
+    let btn=document.getElementById("a"+i);
+    btn.innerText=p.a[i];
+    btn.classList.remove("correct","wrong");
   }
 }
 
 function responder(i){
-  if(i===perguntas[atual].c){
+  if(bloqueado) return;
+  bloqueado=true;
+
+  let certa=perguntas[atual].c;
+
+  if(i===certa){
     pontos++;
-  }
-
-  atual++;
-
-  if(atual<perguntas.length){
-    mostrar();
+    document.getElementById("a"+i).classList.add("correct");
+    document.getElementById("feedback").innerText="✅ Bravo! Resposta certa!";
   }else{
-    fim();
+    document.getElementById("a"+i).classList.add("wrong");
+    document.getElementById("a"+certa).classList.add("correct");
+    document.getElementById("feedback").innerText="❌ Ups! A correta era: "+perguntas[atual].a[certa];
   }
+
+  setTimeout(()=>{
+    atual++;
+    if(atual<perguntas.length){
+      mostrar();
+    }else{
+      fim();
+    }
+  },1300);
 }
 
 function fim(){
   document.getElementById("quizBox").classList.add("hidden");
   document.getElementById("fimBox").classList.remove("hidden");
 
+  let msg="";
+  if(pontos>=18){ msg="🏆 Fantástico! És uma verdadeira fã dos Il Volo!"; }
+  else if(pontos>=14){ msg="✨ Muito bom! Conheces muito bem o trio!"; }
+  else if(pontos>=10){ msg="🎶 Bom resultado! Continua a jogar!"; }
+  else{ msg="💙 Continua a treinar, Volover!"; }
+
   document.getElementById("resultado").innerText =
-    nome+" fez "+pontos+" pontos de "+perguntas.length+" 🎉";
+    nome+" fez "+pontos+" pontos de "+perguntas.length+" 🎉\n"+msg;
+
+  confetti();
 }
 
+function confetti(){
+  for(let i=0;i<100;i++){
+    let c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=["gold","white","#ffcc00","#ff4d4d","#4da6ff"][Math.floor(Math.random()*5)];
+    c.style.animationDuration=(Math.random()*2+2)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
 </script>
 
 </body>
